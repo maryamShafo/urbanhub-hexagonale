@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: qualite-air }
+spec:
+  replicas: 2                          # deux copies : l'une tombe, l'autre répond
+  selector: { matchLabels: { app: qualite-air } }
+  strategy: { type: RollingUpdate }    # la mise à jour progressive du 3.4
+  template:
+    metadata: { labels: { app: qualite-air } }
+    spec:
+      containers:
+        - name: qualite-air
+          image: urbanhub/qualite-air:1.0.0
+          ports: [{ containerPort: 8001 }]
+          env:
+            - { name: PORT, value: "8001" }
+            - { name: URL_ALERTES, value: "http://alertes:8002/alertes" }
+---
+apiVersion: v1
+kind: Service                          # l'adresse stable : http://qualite-air:8001
+metadata: { name: qualite-air }
+spec:
+  selector: { app: qualite-air }
+  ports: [{ port: 8001, targetPort: 8001 }]

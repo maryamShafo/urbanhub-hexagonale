@@ -1,0 +1,19 @@
+{
+  "name": "urbanhub-hexagonale",
+  "private": true,
+  "type": "module",
+  "description": "UrbanHub, service Qualite de l'air et microservice Alertes, en architecture hexagonale (TypeScript, execute par Node.js)",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "test": "node --test \"test/**/*.test.ts\"",
+    "types": "tsc --noEmit",
+    "air": "node urbanhub-air/src/principal.ts",
+    "alertes": "node urbanhub-alertes/src/principal.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.9.0"
+  }
+}

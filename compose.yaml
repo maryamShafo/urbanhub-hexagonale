@@ -1,0 +1,40 @@
+# Les deux services et Kafka (KRaft, un seul noeud, sans ZooKeeper) : docker compose up
+services:
+  kafka:
+    image: apache/kafka:4.0.0
+    ports:
+      - "9092:9092"                       # depuis votre poste : localhost:9092
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_LISTENERS: INTERNE://:19092,EXTERNE://:9092,CONTROLEUR://:9093
+      KAFKA_ADVERTISED_LISTENERS: INTERNE://kafka:19092,EXTERNE://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNE:PLAINTEXT,EXTERNE:PLAINTEXT,CONTROLEUR:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNE
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLEUR
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1   # un seul noeud : une seule copie
+      KAFKA_NUM_PARTITIONS: 3                     # le topic alertes : trois partitions
+
+  alertes:
+    image: node:24-slim
+    working_dir: /app
+    volumes:
+      - ./urbanhub-alertes:/app/urbanhub-alertes:ro
+      - ./package.json:/app/package.json:ro
+    command: ["node", "urbanhub-alertes/src/principal.ts"]
+    environment:
+      PORT: "8002"
+    ports:
+      - "8002:8002"
+
+  air:
+    build: .
+    environment:
+      URL_ALERTES: http://alertes:8002/alertes
+      KAFKA_BROKERS: kafka:19092          # lu par principal.ts une fois l'adaptateur Kafka branché (TP 4)
+    ports:
+      - "8001:8001"
+    depends_on:
+      - kafka
+      - alertes
