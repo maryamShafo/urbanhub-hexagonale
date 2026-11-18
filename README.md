@@ -80,3 +80,25 @@ Toutes les dépendances pointent vers le centre. Le test `test/bruitRegleDependa
     npm test          # tous les tests
     npm run alertes   # le service Alertes, port 8002
     npm run bruit     # le service Bruit, port 8003
+
+## TP 3 — Monolithe ou microservices, pour UrbanHub
+
+- Lien : https://github.com/maryamShafo/urbanhub-hexagonale
+- Empreinte du commit : bc27302
+- Chemin du livrable : docs/ (fichiers tp3-*) et k8s/tp3-etape5-bruit.yaml
+
+### Les livrables
+
+| Livrable | Fichier |
+|---|---|
+| Les contextes délimités et leurs données | `docs/tp3-contextes.md` |
+| Les deux schémas (monolithe et microservices) | `docs/tp3-schemas.md` |
+| Le tableau comparatif | `docs/tp3-comparatif.md` |
+| La vue d'ensemble et la gestion de chaque service | `docs/tp3-vue-ensemble.md` |
+| La stratégie de déploiement | `docs/tp3-etape5-deploiement.md` |
+| Le manifeste Kubernetes du service Bruit | `k8s/tp3-etape5-bruit.yaml` |
+| La conclusion | `docs/tp3-etape6-conclusion.md` |
+
+### En bref
+
+Aujourd'hui, je garde UrbanHub en monolithe hexagonal : chaque service garde ses données dans un fichier ou en mémoire, donc aucun ne peut encore avoir plusieurs copies. Je passerais aux microservices si un service doit tenir beaucoup plus de charge que les autres, si une panne doit rester contenue, ou si les livraisons ne vont plus au même rythme.    
