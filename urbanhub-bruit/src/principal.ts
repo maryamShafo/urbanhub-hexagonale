@@ -4,8 +4,7 @@
 // et les branche. Les tests ne l'importent pas : ils font leur propre assemblage.
 // ===========================================================
 import { createServer } from "node:http";
-import { DepotMesuresBruitSqlite } from "./adaptateurs/depotSqlite.ts";
-import { gestionnaire } from "./adaptateurs/entreeHttp.ts";
+import { DepotMesuresBruitJson } from "./adaptateurs/depotJson.ts";import { gestionnaire } from "./adaptateurs/entreeHttp.ts";
 import { PublicateurAlertesBruitHttp } from "./adaptateurs/publicationHttp.ts";
 import { PublicateurBruitAvecReessai } from "./adaptateurs/reessai.ts";
 import { SeuilJourNuit } from "./regles.ts";
@@ -13,9 +12,8 @@ import { SurveillanceBruit } from "./service.ts";
 
 const env = process.env;
 
-// 1. Le dépôt : une base SQLite
-const depot = new DepotMesuresBruitSqlite(env.BASE_BRUIT ?? "bruit.db");
-
+// 1. Le dépôt : un fichier JSON (il remplace SQLite, derrière le même port)
+const depot = new DepotMesuresBruitJson(env.BASE_BRUIT ?? "bruit.json");
 // 2. Les alertes : HTTP vers Alertes, enveloppé par le réessai (Décorateur)
 const alertes = new PublicateurBruitAvecReessai(new PublicateurAlertesBruitHttp(
   env.URL_ALERTES ?? "http://localhost:8002/alertes"));
