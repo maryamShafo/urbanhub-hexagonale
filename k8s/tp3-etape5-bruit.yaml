@@ -1,0 +1,51 @@
+# Le service Bruit, décrit pour Kubernetes : l'état voulu, écrit une fois.
+# Appliquer : kubectl apply -f k8s/
+#
+# Aujourd'hui, Bruit range ses mesures dans un fichier (bruit.json) :
+# une seule copie, sinon chaque copie aurait son fichier et la moyenne
+# de l'heure serait fausse. D'où la stratégie Recreate.
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: bruit }
+spec:
+  replicas: 1                          # une copie : le fichier ne se partage pas
+  selector: { matchLabels: { app: bruit } }
+  strategy: { type: Recreate }         # on arrête l'ancienne version, puis on démarre la nouvelle
+  template:
+    metadata: { labels: { app: bruit } }
+    spec:
+      containers:
+        - name: bruit
+          image: urbanhub/bruit:1.0.0  # une image par microservice, version fixée
+          ports: [{ containerPort: 8003 }]
+          env:                         # la configuration hors du code
+            - { name: PORT, value: "8003" }
+            - { name: BASE_BRUIT, value: "/donnees/bruit.json" }
+            - { name: URL_ALERTES, value: "http://alertes:8002/alertes" }
+          volumeMounts:
+            - { name: donnees, mountPath: /donnees }
+          readinessProbe:              # Kubernetes n'envoie des requêtes que si le port répond
+            tcpSocket: { port: 8003 }
+            initialDelaySeconds: 2
+          livenessProbe:               # si le port ne répond plus, Kubernetes relance le conteneur
+            tcpSocket: { port: 8003 }
+            periodSeconds: 10
+      volumes:
+        - name: donnees
+          persistentVolumeClaim: { claimName: bruit-donnees }
+---
+# Le volume : bruit.json survit au remplacement du conteneur.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata: { name: bruit-donnees }
+spec:
+  accessModes: [ReadWriteOnce]
+  resources: { requests: { storage: 1Gi } }
+---
+# L'adresse stable : les autres appellent http://bruit:8003
+apiVersion: v1
+kind: Service
+metadata: { name: bruit }
+spec:
+  selector: { app: bruit }
+  ports: [{ port: 8003, targetPort: 8003 }]
