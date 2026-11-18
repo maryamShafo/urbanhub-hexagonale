@@ -5,6 +5,7 @@ import assert from "node:assert/strict";
 import type { AlerteBruit } from "../urbanhub-bruit/src/ports.ts";
 import { DepotMesuresBruitEnMemoire } from "../urbanhub-bruit/src/adaptateurs/depotMemoire.ts";
 import { mesureBruit } from "../urbanhub-bruit/src/domaine.ts";
+import { SeuilJourNuit } from "../urbanhub-bruit/src/regles.ts";
 import { SurveillanceBruit } from "../urbanhub-bruit/src/service.ts";
 
 // Une mesure du capteur "bruit-3", à une date et une heure données
@@ -15,7 +16,8 @@ const bruit = (decibels: number, horodatage: string) =>
 function preparer() {
   const publiees: AlerteBruit[] = [];
   const alertesEspionnes = { publier: async (a: AlerteBruit) => { publiees.push(a); } };
-  const service = new SurveillanceBruit(new DepotMesuresBruitEnMemoire(), alertesEspionnes);
+  const service = new SurveillanceBruit(new DepotMesuresBruitEnMemoire(), alertesEspionnes,
+    new SeuilJourNuit(65, 55));
   return { service, publiees };
 }
 

@@ -1,10 +1,10 @@
 // La règle de dépendance du service Bruit :
-// le centre (domaine, ports, cas d'utilisation) n'importe AUCUNE technique.
+// le centre (domaine, ports, règles, cas d'utilisation) n'importe AUCUNE technique.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 
-const CENTRE = ["domaine.ts", "ports.ts", "service.ts"];
+const CENTRE = ["domaine.ts", "ports.ts", "regles.ts", "service.ts"];
 // Interdit : la base (node:sqlite), le réseau (node:http, node:net, fetch),
 // les fichiers (node:fs) et les adaptateurs.
 const INTERDIT = /from\s+["'](node:(sqlite|http|net|fs)|\.\/adaptateurs\/)|\bfetch\(/;

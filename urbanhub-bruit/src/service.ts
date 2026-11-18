@@ -2,48 +2,35 @@
 // LE CAS D'UTILISATION du service Bruit
 // C'est le scénario : « une mesure arrive ». Il implémente le port
 // primaire et ne connaît que des PORTS, jamais une base ou un réseau.
+// La règle d'alerte arrive de l'extérieur : c'est le patron Stratégie.
 // ===========================================================
-import { alerteBruit, heureDe } from "./domaine.ts";
+import { heureDe } from "./domaine.ts";
 import type { DepotMesuresBruit, EnregistrerMesureBruit, MesureBruit,
   PublicateurAlertesBruit } from "./ports.ts";
-
-const SEUIL_JOUR = 65;   // dB, de 6 h à 22 h
-const SEUIL_NUIT = 55;   // dB, de 22 h à 6 h
-
-/** La nuit va de 22 h à 6 h. "2026-11-18T23" -> true */
-const estLaNuit = (heure: string) => {
-  const h = Number(heure.slice(11, 13));
-  return h >= 22 || h < 6;
-};
-
-const moyenne = (ms: MesureBruit[]) =>
-  ms.reduce((somme, m) => somme + m.decibels, 0) / ms.length;
+import type { RegleBruit } from "./regles.ts";
 
 export class SurveillanceBruit implements EnregistrerMesureBruit {
-  // des PORTS, jamais une base ou un réseau
+  // des PORTS et une RÈGLE, jamais une base ou un réseau
   #depot: DepotMesuresBruit;
   #alertes: PublicateurAlertesBruit;
+  #regle: RegleBruit;
 
-  // Les ports arrivent en paramètre : c'est l'injection.
-  // Le service ne fabrique jamais lui-même son dépôt.
-  constructor(depot: DepotMesuresBruit, alertes: PublicateurAlertesBruit) {
+  // Tout arrive en paramètre : c'est l'injection.
+  constructor(depot: DepotMesuresBruit, alertes: PublicateurAlertesBruit, regle: RegleBruit) {
     this.#depot = depot;
     this.#alertes = alertes;
+    this.#regle = regle;
   }
 
   async executer(mesure: MesureBruit) {
     // 1. ranger la mesure
     this.#depot.enregistrer(mesure);
     // 2. relire toutes les mesures du capteur pour cette heure
-    const heure = heureDe(mesure.horodatage);
-    const deLHeure = this.#depot.deLHeure(mesure.capteur, heure);
-    // 3. la règle métier : moyenne de l'heure au-dessus du seuil du jour ou de la nuit
-    const seuil = estLaNuit(heure) ? SEUIL_NUIT : SEUIL_JOUR;
-    const m = moyenne(deLHeure);
-    if (m > seuil) {
+    const deLHeure = this.#depot.deLHeure(mesure.capteur, heureDe(mesure.horodatage));
+    // 3. demander à la règle (la Stratégie) si le seuil est franchi
+    if (this.#regle.estFranchie(deLHeure)) {
       // 4. prévenir, par le port
-      await this.#alertes.publier(alerteBruit({ capteur: mesure.capteur, heure,
-        moyenne: m, seuil }));
+      await this.#alertes.publier(this.#regle.alerte(deLHeure));
     }
   }
 }
