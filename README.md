@@ -16,3 +16,9 @@ Maryam — IMIE Paris
 | `docs/rapport-tp1.md` | Étape 2 : les trois avantages choisis et les lignes de code qui les prouvent. |
 | `docs/comparaison-tp1.md` | Étape 4 : comparaison avec le service Alertes ; il lui manque « la technique se remplace », et il le mérite. |
 | `docs/rapport-final-tp1.md` | Étape 5 : le rapport complet, un avantage par section (extrait, expérience, prix, effet chez nous). |
+
+## TP 2 — Un service UrbanHub en hexagone, avec deux patrons
+
+### Le service : Bruit
+
+Règle métier : un capteur de bruit déclenche une alerte quand la moyenne de ses mesures sur une heure dépasse 65 dB le jour (de 6 h à 22 h) ou 55 dB la nuit (de 22 h à 6 h).
