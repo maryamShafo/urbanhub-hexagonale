@@ -9,11 +9,12 @@ import { DepotMesuresBruitEnMemoire } from "../urbanhub-bruit/src/adaptateurs/de
 import { DepotMesuresBruitSqlite } from "../urbanhub-bruit/src/adaptateurs/depotSqlite.ts";
 import type { DepotMesuresBruit } from "../urbanhub-bruit/src/ports.ts";
 import { mesureBruit } from "../urbanhub-bruit/src/domaine.ts";
+import { DepotMesuresBruitJson } from "../urbanhub-bruit/src/adaptateurs/depotJson.ts";
 
 // La liste des adaptateurs à vérifier : la mémoire et SQLite
 const adaptateurs: Record<string, () => DepotMesuresBruit> = {
   memoire: () => new DepotMesuresBruitEnMemoire(),
-  sqlite: () => new DepotMesuresBruitSqlite(join(mkdtempSync(join(tmpdir(), "bruit-")), "b.db")),
+  sqlite: () => new DepotMesuresBruitSqlite(join(mkdtempSync(join(tmpdir(), "bruit-")), "b.db")),  json: () => new DepotMesuresBruitJson(join(mkdtempSync(join(tmpdir(), "bruit-")), "b.json")),
 };
 
 const bruit = (capteur: string, horodatage: string) =>
