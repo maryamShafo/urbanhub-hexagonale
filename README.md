@@ -147,3 +147,26 @@ Lancer : `docker compose -f compose-bruit.yaml up -d`.
 - Lien : https://github.com/maryamShafo/urbanhub-hexagonale
 - Empreinte du commit : cc21999
 - Chemin du livrable : urbanhub-bruit/ et urbanhub-notifications/ (code), test/ (tests), docs/tp4-trace-*.txt (traces), README.md partie TP 4 (défis et solutions)
+
+## Déclaration d'usage des assistants IA
+
+**Outil** : Claude (Anthropic), utilisé pour les TP 1 à 5.
+
+**Usages**
+- Comprendre les slides du cours (hexagone, patrons, bleu-vert, canari, passerelle d'API, contexte délimité, observabilité).
+- Être guidée étape par étape dans chaque TP, avec les commandes à taper.
+- Générer la plupart du code et des tests (service Bruit, service Notifications, Décorateurs, adaptateurs Kafka, compose, manifeste Kubernetes).
+- Rédiger un premier jet des documents (rapports, README, retour d'expérience, plan du dossier) et des schémas en images.
+- Corriger des problèmes techniques : connexion Git, version de Node.js, PowerShell, Docker, erreurs Kafka.
+
+**Mes demandes principales** : « dis-moi petit à petit ce que je dois faire », « explique-moi ce code avec des commentaires », « vérifie que ça correspond au cours », « fais-moi un vrai dessin en image ».
+
+**Ce que j'ai vérifié moi-même** : j'ai lancé tous les tests sur mon poste, et j'ai joué moi-même le scénario, la panne et le rejeu avec Docker et Kafka. Les traces de `docs/` viennent de mon terminal.
+
+**Ce que j'ai gardé ou rejeté, et pourquoi**
+- J'ai **rejeté** la création d'un nouveau dépôt pour les TP 3 et 5 : mon professeur m'a demandé de garder mon dépôt.
+- J'ai **rejeté** les numéros de slides dans la comparaison du TP 1, et demandé un texte plus court : je voulais un texte simple.
+- J'ai **rejeté** les schémas en texte (ASCII) du TP 3 : ils s'affichaient mal, j'ai demandé de vraies images.
+- J'ai **gardé un seul commit** pour les trois expériences du TP 1, alors que l'IA conseillait des commits séparés.
+- J'ai **demandé une vérification** quand des numéros de slides étaient faux : l'IA s'était trompée d'une page, et elle a corrigé.
+- J'ai **gardé** les choix d'architecture proposés (service Bruit, Notifications, Kafka 3.9) après les avoir compris, et je peux les expliquer.
