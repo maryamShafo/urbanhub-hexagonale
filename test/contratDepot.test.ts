@@ -5,6 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { DepotMesuresEnMemoire } from "../urbanhub-air/src/adaptateurs/depotMemoire.ts";
 import { DepotMesuresSqlite } from "../urbanhub-air/src/adaptateurs/depotSqlite.ts";
+import { DepotMesuresJson } from "../urbanhub-air/src/adaptateurs/depotJson.ts";
 import type { DepotMesures } from "../urbanhub-air/src/ports.ts";
 import { mesure } from "../urbanhub-air/src/domaine.ts";
 
@@ -12,6 +13,7 @@ import { mesure } from "../urbanhub-air/src/domaine.ts";
 const adaptateurs: Record<string, () => DepotMesures> = {
   memoire: () => new DepotMesuresEnMemoire(),
   sqlite: () => new DepotMesuresSqlite(join(mkdtempSync(join(tmpdir(), "air-")), "m.db")),
+  json: () => new DepotMesuresJson(join(mkdtempSync(join(tmpdir(), "air-")), "m.json")),
 };
 const pm10 = (capteur: string, jour: string) => mesure({ capteur, polluant: "PM10", valeur: 40,
   horodatage: `${jour}T08:00:00` });
