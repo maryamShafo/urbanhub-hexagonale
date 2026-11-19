@@ -170,3 +170,9 @@ Lancer : `docker compose -f compose-bruit.yaml up -d`.
 - J'ai **gardé un seul commit** pour les trois expériences du TP 1, alors que l'IA conseillait des commits séparés.
 - J'ai **demandé une vérification** quand des numéros de slides étaient faux : l'IA s'était trompée d'une page, et elle a corrigé.
 - J'ai **gardé** les choix d'architecture proposés (service Bruit, Notifications, Kafka 3.9) après les avoir compris, et je peux les expliquer.
+
+## TP 5 — Retour d'expérience et plan de l'EC01
+
+- Lien : https://github.com/maryamShafo/urbanhub-hexagonale
+- Empreinte du commit : b095a9a
+- Chemin du livrable : docs/retour-experience.md (retour d'expérience), docs/plan-dossier-ec01.md (plan du dossier et grille EC01), README.md partie « Déclaration d'usage des assistants IA »
