@@ -144,3 +144,6 @@ Lancer : `docker compose -f compose-bruit.yaml up -d`.
 
 **Ce qui reste à améliorer** : en HTTP, la mesure est enregistrée même quand l'alerte n'a pas pu partir. Une **boîte d'envoi** (outbox, vue au chapitre 4) garderait l'alerte pour la renvoyer plus tard.
 
+- Lien : https://github.com/maryamShafo/urbanhub-hexagonale
+- Empreinte du commit : cc21999
+- Chemin du livrable : urbanhub-bruit/ et urbanhub-notifications/ (code), test/ (tests), docs/tp4-trace-*.txt (traces), README.md partie TP 4 (défis et solutions)
