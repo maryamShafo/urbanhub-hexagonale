@@ -2,6 +2,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import type { AlerteBruit } from "../urbanhub-bruit/src/ports.ts";
+import { CircuitOuvert } from "../urbanhub-bruit/src/adaptateurs/circuitOuvert.ts";
 import { PublicateurBruitAvecReessai } from "../urbanhub-bruit/src/adaptateurs/reessai.ts";
 
 // Un faux publicateur qui tombe en panne les premières fois
@@ -25,4 +26,14 @@ test("Décorateur : une panne passagère est absorbée (2 pannes, réussi au 3e 
 test("Décorateur : une panne durable remonte au lieu d'être cachée", async () => {
   const publicateur = new PublicateurBruitAvecReessai(publicateurQuiTombe(5), 3, 0);
   await assert.rejects(publicateur.publier({} as AlerteBruit), /fetch failed/);
+});
+
+test("Décorateur : un circuit ouvert n'est pas retenté (un seul appel, aucune pause)", async () => {
+  let appels = 0;
+  const interne = { async publier() { appels += 1; throw new CircuitOuvert(); } };
+  const debut = Date.now();
+  await assert.rejects(new PublicateurBruitAvecReessai(interne, 3, 5000).publier({} as AlerteBruit),
+    CircuitOuvert);
+  assert.equal(appels, 1);
+  assert.ok(Date.now() - debut < 1000, "le réessai a fait une pause");
 });

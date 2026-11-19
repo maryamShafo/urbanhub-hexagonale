@@ -6,6 +6,7 @@
 import { createServer } from "node:http";
 import { DepotMesuresBruitJson } from "./adaptateurs/depotJson.ts";
 import { gestionnaire } from "./adaptateurs/entreeHttp.ts";
+import { PublicateurBruitAvecCoupeCircuit } from "./adaptateurs/coupeCircuit.ts";
 import { PublicateurAlertesBruitHttp } from "./adaptateurs/publicationHttp.ts";
 import { PublicateurBruitAvecReessai } from "./adaptateurs/reessai.ts";
 import { SeuilJourNuit } from "./regles.ts";
@@ -15,9 +16,12 @@ const env = process.env;
 
 // 1. Le dépôt : un fichier JSON (il remplace SQLite, derrière le même port)
 const depot = new DepotMesuresBruitJson(env.BASE_BRUIT ?? "bruit.json");
-// 2. Les alertes : HTTP vers Notifications, enveloppé par le réessai (Décorateur)
-const alertes = new PublicateurBruitAvecReessai(new PublicateurAlertesBruitHttp(
-    env.URL_ALERTES ?? "http://localhost:8004/alertes-bruit"));
+
+// 2. Les alertes : HTTP vers Notifications, enveloppé par deux Décorateurs :
+//    le réessai (dehors), puis le coupe-circuit (dedans), puis l'appel HTTP
+const alertes = new PublicateurBruitAvecReessai(
+  new PublicateurBruitAvecCoupeCircuit(
+    new PublicateurAlertesBruitHttp(env.URL_ALERTES ?? "http://localhost:8004/alertes-bruit")));
 
 // 3. La règle : seuil jour/nuit (Stratégie)
 const regle = new SeuilJourNuit(65, 55);
