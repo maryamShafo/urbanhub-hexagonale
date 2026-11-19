@@ -1,0 +1,12 @@
+Scénario complet, de la mesure à l'alerte reçue :
+- bruit-3 envoyé par Kafka   : curl -X POST http://localhost:8003/mesures-bruit (70 dB à 23 h)
+- bruit-5 envoyé en HTTP     : curl -X POST http://localhost:8006/mesures-bruit (70 dB à 23 h)
+
+docker compose -f compose-bruit.yaml logs --since 2m notifications historique
+
+notifications-1  | [notifications] partition 0, offset 0 : reçu bruit-3:bruit:2026-11-18T23
+notifications-1  | NOTIFICATION bruit-3:bruit:2026-11-18T23 : Bruit trop fort près de bruit-3 vers 23 h : 70 dB pour un seuil de 55 dB
+notifications-1  | reçu bruit-5:bruit:2026-11-18T23
+notifications-1  | NOTIFICATION bruit-5:bruit:2026-11-18T23 : Bruit trop fort près de bruit-5 vers 23 h : 70 dB pour un seuil de 55 dB
+historique-1     | [historique] partition 0, offset 0 : reçu bruit-3:bruit:2026-11-18T23
+historique-1     | NOTIFICATION bruit-3:bruit:2026-11-18T23 : Bruit trop fort près de bruit-3 vers 23 h : 70 dB pour un seuil de 55 dB

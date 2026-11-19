@@ -1,0 +1,9 @@
+historique-1  | Service Notifications prêt sur le port 8005
+historique-1  | (node:1) TimeoutNegativeWarning: -1795093042490 is a negative number.
+historique-1  | Timeout duration was set to 1.
+historique-1  | (Use `node --trace-warnings ...` to show where the warning was created)
+historique-1  | {"level":"INFO","timestamp":"2026-11-19T12:57:22.663Z","logger":"kafkajs","message":"[Consumer] Starting","groupId":"historique"}
+historique-1  | {"level":"INFO","timestamp":"2026-11-19T12:57:26.111Z","logger":"kafkajs","message":"[ConsumerGroup] Consumer has joined the group","groupId":"historique","memberId":"notifications-historique-430f1882-577a-41d5-b819-2f0052021ef5","leaderId":"notifications-historique-430f1882-577a-41d5-b819-2f0052021ef5","isLeader":true,"memberAssignment":{"alertes-bruit":[0,1,2]},"groupProtocol":"RoundRobinAssigner","duration":3445}
+historique-1  | Notifications lit Kafka (kafka:19092), groupe historique
+historique-1  | [historique] partition 0, offset 0 : reçu bruit-3:bruit:2026-11-18T23
+historique-1  | [historique] partition 0, offset 1 : reçu bruit-3:bruit:2026-11-19T01

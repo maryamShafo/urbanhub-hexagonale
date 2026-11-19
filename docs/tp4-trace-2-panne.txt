@@ -1,0 +1,34 @@
+historique-1     | [historique] partition 0, offset 1 : reçu bruit-3:bruit:2026-11-19T01
+notifications-1  | Service Notifications prêt sur le port 8004
+bruit-http-1     | [DOMException [TimeoutError]: The operation was aborted due to timeout]
+historique-1     | NOTIFICATION bruit-3:bruit:2026-11-19T01 : Bruit trop fort près de bruit-3 vers 01 h : 70 dB pour un seuil de 55 dB
+notifications-1  | (node:1) TimeoutNegativeWarning: -1795092902665 is a negative number.
+bruit-http-1     | CircuitOuvert: circuit ouvert
+bruit-http-1     |     at PublicateurBruitAvecCoupeCircuit.publier (file:///app/urbanhub-bruit/src/adaptateurs/coupeCircuit.ts:31:13)
+bruit-http-1     |     at PublicateurBruitAvecReessai.publier (file:///app/urbanhub-bruit/src/adaptateurs/reessai.ts:26:36)
+bruit-http-1     |     at async SurveillanceBruit.executer (file:///app/urbanhub-bruit/src/service.ts:33:7)
+bruit-http-1     |     at async Server.<anonymous> (file:///app/urbanhub-bruit/src/adaptateurs/entreeHttp.ts:15:7)
+notifications-1  | Timeout duration was set to 1.
+notifications-1  | (Use `node --trace-warnings ...` to show where the warning was created)
+notifications-1  | {"level":"INFO","timestamp":"2026-11-19T12:55:02.830Z","logger":"kafkajs","message":"[Consumer] Starting","groupId":"notifications"}
+notifications-1  | {"level":"INFO","timestamp":"2026-11-19T12:55:06.196Z","logger":"kafkajs","message":"[ConsumerGroup] Consumer has joined the group","groupId":"notifications","memberId":"notifications-notifications-f6667bfd-9177-4f60-a1b7-84990ec51d6a","leaderId":"notifications-notifications-f6667bfd-9177-4f60-a1b7-84990ec51d6a","isLeader":true,"memberAssignment":{"alertes-bruit":[0,1,2]},"groupProtocol":"RoundRobinAssigner","duration":3365}
+notifications-1  | Notifications lit Kafka (kafka:19092), groupe notifications
+notifications-1  | [notifications] partition 0, offset 1 : reçu bruit-3:bruit:2026-11-19T01
+notifications-1  | NOTIFICATION bruit-3:bruit:2026-11-19T01 : Bruit trop fort près de bruit-3 vers 01 h : 70 dB pour un seuil de 55 dB
+bruit-http-1     | CircuitOuvert: circuit ouvert
+bruit-http-1     |     at PublicateurBruitAvecCoupeCircuit.publier (file:///app/urbanhub-bruit/src/adaptateurs/coupeCircuit.ts:31:13)
+bruit-http-1     |     at PublicateurBruitAvecReessai.publier (file:///app/urbanhub-bruit/src/adaptateurs/reessai.ts:26:36)
+bruit-http-1     |     at SurveillanceBruit.executer (file:///app/urbanhub-bruit/src/service.ts:33:27)
+bruit-http-1     |     at Server.<anonymous> (file:///app/urbanhub-bruit/src/adaptateurs/entreeHttp.ts:15:17)
+bruit-http-1     |     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+bruit-http-1     | CircuitOuvert: circuit ouvert
+bruit-http-1     |     at PublicateurBruitAvecCoupeCircuit.publier (file:///app/urbanhub-bruit/src/adaptateurs/coupeCircuit.ts:31:13)
+bruit-http-1     |     at PublicateurBruitAvecReessai.publier (file:///app/urbanhub-bruit/src/adaptateurs/reessai.ts:26:36)
+bruit-http-1     |     at SurveillanceBruit.executer (file:///app/urbanhub-bruit/src/service.ts:33:27)
+bruit-http-1     |     at Server.<anonymous> (file:///app/urbanhub-bruit/src/adaptateurs/entreeHttp.ts:15:17)
+bruit-http-1     |     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+bruit-http-1     | CircuitOuvert: circuit ouvert
+bruit-http-1     |     at PublicateurBruitAvecCoupeCircuit.publier (file:///app/urbanhub-bruit/src/adaptateurs/coupeCircuit.ts:31:13)
+bruit-http-1     |     at PublicateurBruitAvecReessai.publier (file:///app/urbanhub-bruit/src/adaptateurs/reessai.ts:26:36)
+bruit-http-1     |     at async SurveillanceBruit.executer (file:///app/urbanhub-bruit/src/service.ts:33:7)
+bruit-http-1     |     at async Server.<anonymous> (file:///app/urbanhub-bruit/src/adaptateurs/entreeHttp.ts:15:7)

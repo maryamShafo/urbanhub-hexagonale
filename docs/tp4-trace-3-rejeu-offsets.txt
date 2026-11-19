@@ -1,0 +1,7 @@
+Groupe historique arrêté, puis remis au début du topic :
+kafka-consumer-groups.sh --group historique --topic alertes-bruit --reset-offsets --to-earliest --execute
+
+GROUP        TOPIC          PARTITION  NEW-OFFSET
+historique   alertes-bruit  2          0
+historique   alertes-bruit  1          0
+historique   alertes-bruit  0          0

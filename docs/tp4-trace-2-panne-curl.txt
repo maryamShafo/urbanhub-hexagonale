@@ -1,0 +1,8 @@
+Notifications arrêté (docker compose stop notifications), puis :
+
+HTTP  (bruit-5, 01 h) : statut 500 en 7.511600 s   -> 3 essais de 2 s + 1,5 s de pauses
+HTTP  (bruit-5, 01 h) : statut 500 en 5.511067 s   -> 5e échec : le coupe-circuit s'ouvre
+HTTP  (bruit-5, 02 h) : statut 500 en 0.008308 s   -> circuit ouvert : refus immédiat
+HTTP  (bruit-5, 02 h) : statut 500 en 0.005286 s   -> circuit ouvert : refus immédiat
+HTTP  (bruit-5, 03 h) : statut 500 en 2.507170 s   -> après 30 s : appel d'essai raté, circuit rouvert
+Kafka (bruit-3, 01 h) : statut 202 en 0.013584 s   -> Kafka garde l'alerte, Bruit n'est pas ralenti
