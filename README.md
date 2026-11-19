@@ -20,38 +20,17 @@ Maryam — IMIE Paris
 
 ## TP 2 — Un service UrbanHub en hexagone, avec deux patrons
 
+- Lien : https://github.com/maryamShafo/urbanhub-hexagonale
+- Empreinte du commit : d8525f5
+- Chemin du livrable : urbanhub-bruit/ (code), test/bruit*.test.ts (tests), README.md 
+
 ### Le service : Bruit
 
 **Règle de gestion** : un capteur de bruit déclenche une alerte quand la moyenne de ses mesures sur une heure dépasse 65 dB le jour (de 6 h à 22 h) ou 55 dB la nuit (de 22 h à 6 h). Près d'un hôpital ou d'une école, le seuil est de 50 dB, jour et nuit.
 
 Code : `urbanhub-bruit/`, en TypeScript. Tests : `test/bruit*.test.ts`.
 
-### Le schéma
-
-```
-                 ENTRÉE (adaptateur primaire)
-                 entreeHttp.ts : POST /mesures-bruit
-                            |
-                            v
-              port primaire EnregistrerMesureBruit
-   +-----------------------------------------------------+
-   |  CENTRE (aucun import technique)                    |
-   |  domaine.ts   : MesureBruit, AlerteBruit            |
-   |  service.ts   : SurveillanceBruit (cas d'utilisation)|
-   |  regles.ts    : RegleBruit (Stratégie)              |
-   |                 SeuilJourNuit, SeuilZoneSensible    |
-   +-----------------------------------------------------+
-            |                                |
-   port DepotMesuresBruit          port PublicateurAlertesBruit
-            |                                |
-            v                                v
-   depotMemoire.ts (tests)        PublicateurBruitAvecReessai (Décorateur)
-   depotSqlite.ts                            |
-   depotJson.ts (production)                 v
-                                   publicationHttp.ts -> service Alertes
-
-   principal.ts (racine de composition) : le seul fichier qui branche tout
-```
+![Le service Bruit en hexagone](../node/docs/images/tp2-bruit-hexagone.png)
 
 Toutes les dépendances pointent vers le centre. Le test `test/bruitRegleDependance.test.ts` le vérifie.
 
