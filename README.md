@@ -102,3 +102,45 @@ Toutes les dépendances pointent vers le centre. Le test `test/bruitRegleDependa
 ### En bref
 
 Aujourd'hui, je garde UrbanHub en monolithe hexagonal : chaque service garde ses données dans un fichier ou en mémoire, donc aucun ne peut encore avoir plusieurs copies. Je passerais aux microservices si un service doit tenir beaucoup plus de charge que les autres, si une panne doit rester contenue, ou si les livraisons ne vont plus au même rythme.    
+
+## TP 4 — Deux microservices hexagonaux qui se parlent
+
+### Les deux services
+
+- **Bruit** (`urbanhub-bruit/`, port 8003) : reçoit les mesures, applique la règle jour/nuit, publie l'alerte. Sa base : `bruit.json`.
+- **Notifications** (`urbanhub-notifications/`, port 8004) : un second contexte délimité. Il reçoit l'alerte et prévient les riverains, une seule fois par alerte. Ses ports : `RecevoirAlerte` (primaire), `AlertesTraitees` et `Riverains` (secondaires).
+
+Les deux sont en hexagone, avec leurs tests verts : `npm test`.
+
+### Les deux adaptateurs de publication (même port `PublicateurAlertesBruit`)
+
+| Adaptateur | Fichier | Réglages |
+|---|---|---|
+| HTTP | `urbanhub-bruit/src/adaptateurs/publicationHttp.ts` | délai de 2 s (`AbortSignal.timeout`) |
+| Kafka | `urbanhub-bruit/src/adaptateurs/publicationKafka.ts` | topic `alertes-bruit` de 3 partitions, clé = le capteur, deux groupes (`notifications`, `historique`) |
+
+Autour, deux Décorateurs : le réessai borné (`reessai.ts`, 3 essais) et le coupe-circuit (`coupeCircuit.ts`, ouvert après 5 échecs, 30 s, puis un appel d'essai). Le cas d'utilisation n'a pas changé d'une ligne.
+
+### Les traces
+
+| Trace | Fichier |
+|---|---|
+| Le scénario, de la mesure à l'alerte reçue | `docs/tp4-trace-1-scenario.txt` |
+| La panne de Notifications, en HTTP et par Kafka | `docs/tp4-trace-2-panne.txt`, `docs/tp4-trace-2-panne-curl.txt` |
+| Le rejeu du groupe `historique` depuis le début | `docs/tp4-trace-3-rejeu.txt`, `docs/tp4-trace-3-rejeu-offsets.txt` |
+
+Lancer : `docker compose -f compose-bruit.yaml up -d`.
+
+### Les défis rencontrés et leurs solutions
+
+| Défi | Ce que j'ai vu | Solution |
+|---|---|---|
+| Notifications lent ou coupé | Une mesure attendait **7,5 s** avant d'échouer (3 essais de 2 s + 1,5 s de pauses). | Le **coupe-circuit** : après 5 échecs, les appels sont refusés en **0,005 s**, sans toucher le réseau. |
+| Alertes perdues en HTTP pendant la panne | Bruit répondait 500 : les alertes de `bruit-5` à 01 h, 02 h et 03 h ne sont jamais arrivées. | **Kafka** : pendant la même panne, Bruit a répondu 202 en 0,014 s. L'alerte a attendu dans le topic, et Notifications l'a rattrapée à son redémarrage. |
+| Doublons (le réessai ou le rejeu livrent deux fois) | Deux mesures dans la même heure, ou un rejeu, envoient la même alerte. | **L'idempotence** : un identifiant tiré de la mesure (`capteur:bruit:heure`). Un doublon n'agit pas (`test/notificationsIdempotent.test.ts`). |
+| Le rejeu après un redémarrage | En mémoire, la liste des alertes traitées est perdue au redémarrage : le rejeu aurait tout renvoyé en double. | Un **adaptateur fichier** pour le port `AlertesTraitees`. Au rejeu, le groupe a relu les offsets 0 et 1 **sans aucune notification en double**. En production, ce serait une table. |
+| Le topic n'existait pas au démarrage | Les consommateurs plantaient avec `UNKNOWN_TOPIC_OR_PARTITION`. | `restart: on-failure` dans le compose : ils se relancent, et Bruit crée le topic avec 3 partitions. |
+| `kafkajs` et Kafka 4.0 | `kafkajs` n'est plus mis à jour, et Kafka 4.0 a retiré d'anciennes versions de son protocole. | J'ai pris **Kafka 3.9** dans le compose. L'avertissement `TimeoutNegativeWarning` de `kafkajs` est sans gravité. |
+
+**Ce qui reste à améliorer** : en HTTP, la mesure est enregistrée même quand l'alerte n'a pas pu partir. Une **boîte d'envoi** (outbox, vue au chapitre 4) garderait l'alerte pour la renvoyer plus tard.
+
