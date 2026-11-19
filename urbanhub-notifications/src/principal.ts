@@ -5,12 +5,16 @@ import { Kafka } from "kafkajs";
 import { traiterMessage } from "./adaptateurs/entreeKafka.ts";
 import { gestionnaire } from "./adaptateurs/entreeHttp.ts";
 import { RiverainsJournal } from "./adaptateurs/riverainsJournal.ts";
+import { AlertesTraiteesFichier } from "./adaptateurs/traiteesFichier.ts";
 import { AlertesTraiteesEnMemoire } from "./adaptateurs/traiteesMemoire.ts";
 import { NotificationsBruit } from "./service.ts";
 
 const env = process.env;
 const port = Number(env.PORT ?? 8004);
-const service = new NotificationsBruit(new AlertesTraiteesEnMemoire(), new RiverainsJournal());
+// Les alertes déjà traitées : dans un fichier si TRAITEES est donné (elles survivent
+// au redémarrage et au rejeu), sinon en mémoire.
+const traitees = env.TRAITEES ? new AlertesTraiteesFichier(env.TRAITEES) : new AlertesTraiteesEnMemoire();
+const service = new NotificationsBruit(traitees, new RiverainsJournal());
 
 // Entrée 1 : HTTP
 createServer(gestionnaire(service)).listen(port);
