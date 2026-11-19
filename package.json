@@ -11,7 +11,8 @@
     "types": "tsc --noEmit",
     "air": "node urbanhub-air/src/principal.ts",
     "alertes": "node urbanhub-alertes/src/principal.ts",
-    "bruit": "node urbanhub-bruit/src/principal.ts"
+    "bruit": "node urbanhub-bruit/src/principal.ts",
+    "notifications": "node urbanhub-notifications/src/principal.ts"
   },
   "devDependencies": {
     "@types/node": "^24.19.2",
